@@ -2,6 +2,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:form001/loginpage.dart';
 //import 'package:google_fonts/google_fonts.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -117,9 +119,20 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: GestureDetector(
                   onTap: () async {
                     try {
-                      await FirebaseAuth.instance.createUserWithEmailAndPassword(
-                          email: _emailController.text.trim(),
-                          password: _passwordController.text.trim());
+                      await FirebaseAuth.instance
+                          .createUserWithEmailAndPassword(
+                              email: _emailController.text.trim(),
+                              password: _passwordController.text.trim());
+                      Fluttertoast.showToast(
+                          msg: "Register successful, login now",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => LoginPage()));
                     } on FirebaseException catch (e) {
                       // Dialog to display error message
                       showDialog(
@@ -192,9 +205,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) {
-                        return RegisterPage();
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return LoginPage();
                       }));
                     },
                     child: Text(

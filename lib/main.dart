@@ -1,12 +1,16 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:form001/main_page.dart';
-
+import 'package:permission_handler/permission_handler.dart';
 import 'loginpage.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // You can request multiple permissions at once.
+  Map<Permission, PermissionStatus> statuses = await [
+    Permission.location,
+    Permission.storage,
+    Permission.camera
+  ].request();
   await Firebase.initializeApp();
   runApp(const MyApp());
 }

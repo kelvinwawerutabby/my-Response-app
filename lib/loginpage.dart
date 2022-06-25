@@ -2,6 +2,9 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:form001/main_page.dart';
+import 'package:form001/register_page.dart';
 //import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
@@ -115,6 +118,58 @@ class _LoginPageState extends State<LoginPage> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: GestureDetector(
+                  onTap: () async {
+                    try {
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                          email: _emailController.text.trim(),
+                          password: _passwordController.text.trim());
+                      Fluttertoast.showToast(
+                          msg: "Login successful",
+                          toastLength: Toast.LENGTH_SHORT,
+                          gravity: ToastGravity.CENTER,
+                          timeInSecForIosWeb: 1,
+                          backgroundColor: Colors.green,
+                          textColor: Colors.white,
+                          fontSize: 16.0);
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (context) => MainPage()));
+                    } on FirebaseException catch (e) {
+                      // Dialog to display error message
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Error'),
+                              content: Text(e.message!),
+                              actions: [
+                                FlatButton(
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            );
+                          });
+                    } catch (e) {
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('Error'),
+                              content: Text(e.toString()),
+                              actions: [
+                                FlatButton(
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                )
+                              ],
+                            );
+                          });
+                    }
+                  },
                   child: Container(
                     padding: EdgeInsets.all(20),
                     decoration: BoxDecoration(
@@ -149,7 +204,12 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                   GestureDetector(
-                    // onTap: Widget.showRegisteredPage,
+                    onTap: () {
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (context) {
+                        return RegisterPage();
+                      }));
+                    },
                     child: Text(
                       '  Register now',
                       style: TextStyle(
